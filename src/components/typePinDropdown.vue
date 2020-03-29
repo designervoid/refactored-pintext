@@ -36,13 +36,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   data() {
     return {
-      minWidth: "150",
-      items: [
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me 2" }
-      ]
+      minWidth: "150"
     };
   },
   computed: {
