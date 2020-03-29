@@ -29,7 +29,7 @@
 import CategoryDropdown from "./CategoryDropdown";
 import TheCard from "./TheCard";
 import ModalCard from "./ModalCard";
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   components: {
@@ -48,12 +48,13 @@ export default {
     ...mapState("typePin", ["typePinTitle", "typePins"])
   },
   methods: {
+    ...mapActions("pins", ["appendToPinsUser"]),
     closeDialog() {
       this.dialog = false;
+    },
+    createPin(params) {
+      this.appendToPinsUser(params);
     }
-    // createPin() {
-    //   console.log("create pin");
-    // }
   }
 };
 </script>

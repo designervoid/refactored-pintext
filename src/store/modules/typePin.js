@@ -12,7 +12,7 @@ import {
 } from "../mutation-types";
 
 const state = {
-  typePinTitle: "All pins",
+  typePinTitle: "Your pins",
   typePins: [
     { title: "All pins" },
     { title: "Your pins" },

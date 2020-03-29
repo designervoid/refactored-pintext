@@ -6,11 +6,16 @@
     <v-container>
       <v-row class="mx-2">
         <v-col cols="12">
-          <v-text-field
-            prepend-icon="mdi-text"
-            placeholder="Pin"
+          <v-select
             v-model="modal.pin"
-          />
+            :items="pinsGlobal"
+            menu-props="auto"
+            label="Select pin"
+            hide-details
+            prepend-icon="mdi-pin"
+            single-line
+            @change="updateState"
+          ></v-select>
         </v-col>
       </v-row>
       <v-row class="mx-2">
@@ -63,12 +68,12 @@
       <v-btn text color="primary" @click="closeDialog()">Cancel</v-btn>
       <v-btn
         text
-        @click="closeDialog()"
+        @click="createPin()"
         :disabled="
-          !modal.badges.length > 0 ||
-            !modal.title.length > 0 ||
+          !modal.title.length > 0 ||
             !modal.text.length > 0 ||
-            !modal.pin.length > 0
+            !modal.badges.length > 0 ||
+            isDisabledPin
         "
         >Save</v-btn
       >
@@ -95,15 +100,26 @@ export default {
         title: "",
         text: "",
         badges: []
-      }
+      },
+      isDisabledPin: true
     };
   },
   computed: {
-    ...mapGetters("pins", ["hintsGlobal"])
+    ...mapGetters("pins", ["hintsGlobal", "pinsGlobal"])
   },
   methods: {
     closeDialog() {
       this.$emit("close");
+    },
+    createPin() {
+      this.$emit("create", this.modal);
+    },
+    updateState() {
+      this.isDisabledPin = false;
+    },
+    remove(item) {
+      this.modal.badges.splice(this.modal.badges.indexOf(item), 1);
+      this.modal.badges = [...this.modal.badges];
     }
   }
 };

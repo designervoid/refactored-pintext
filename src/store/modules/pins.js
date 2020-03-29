@@ -2,67 +2,53 @@ import {
   REFRESH_RECOMENDATION_PINS,
   SET_RECOMENDATION_PINS,
   REFRESH_RECOMENDATION_HINTS,
-  SET_RECOMENDATION_HINTS
+  SET_RECOMENDATION_HINTS,
+  APPEND_TO_PINS_USER
 } from "../mutation-types";
 
 const state = {
   pinsGlobal: [
     {
+      bookmarked: false,
+      pin: "gaming",
+      title: "gaming dependency",
+      text: "what we gonna say about gaming dependency...",
+      badges: ["game", "gamer", "games", "computer"],
       id: 1,
-      pin: "GLOBAL - gaming",
-      counter: 0,
-      title: "GLOBAL - some title about gaming",
-      text: "GLOBAL - some text here about gaming",
-      badges: [
-        "global_game",
-        "global_gamer",
-        "global_games",
-        "global_computer"
-      ],
-      bookmarked: false
+      counter: 0
     },
     {
-      id: 2,
-      pin: "GLOBAL - programming",
-      counter: 0,
-      title: "GLOBAL - some title about prograaming",
-      text: "GLOBAL - some text here about prograaming",
-      badges: [
-        "global_programmer",
-        "global_code",
-        "global_coder",
-        "global_javascript",
-        "global_computer",
-        "global_vue",
-        "global_python"
-      ],
-      bookmarked: false
-    },
-    {
+      bookmarked: false,
+      pin: "programming",
+      title: "reactive frameworks",
+      text: "new way to create apps",
+      badges: ["programmer", "code", "coder", "javascript", "computer", "vue"],
       id: 3,
-      pin: "GLOBAL - computers",
-      counter: 0,
-      title: "GLOBAL - some title about computers",
-      text: "GLOBAL - some text here about computers",
-      badges: ["global_computer", "global_network"],
-      bookmarked: false
+      counter: 0
+    },
+    {
+      bookmarked: false,
+      pin: "computers",
+      title: "some title about computers",
+      text: "some text here about computers",
+      badges: ["computer", "network"],
+      id: 3,
+      counter: 0
     }
   ],
   pinsUser: [
     {
-      id: 4,
       pin: "USER - gaming",
-      counter: 0,
       title: "USER - some title about gaming",
       text: "USER - some text here about gaming",
-      badges: ["user_game", "user_gamer", "user_games", "user_computer"]
+      badges: ["user_game", "user_gamer", "user_games", "user_computer"],
+      id: 4,
+      counter: 0
     }
   ],
   pinsUserSaved: [
     {
-      id: 5,
       pin: "USER_SAVED - gaming",
-      counter: 0,
       title: "USER_SAVED - some title about gaming",
       text: "USER_SAVED - some text here about gaming",
       badges: [
@@ -70,7 +56,9 @@ const state = {
         "user_saved_gamer",
         "user_saved_games",
         "user_saved_computer"
-      ]
+      ],
+      id: 5,
+      counter: 0
     }
   ],
   recommendedPins: [],
@@ -134,6 +122,16 @@ const getters = {
     }
     let merged = arr.flat(1);
     return merged;
+  },
+  lastPinsUserId: state => {
+    let pinsUser = state.pinsUser;
+    let maximum = 0;
+
+    pinsUser.map(function(obj) {
+      if (obj.id > maximum) maximum = obj.id;
+    });
+
+    return maximum;
   }
 };
 
@@ -157,13 +155,16 @@ const actions = {
     let typePins = rootState.typePin.typePins;
 
     if (typePinTitle === typePins[0].title) {
-      return [...getters.pinsGlobal];
+      let array = Array.from(new Set(getters.pinsGlobal));
+      return [...array];
     }
     if (typePinTitle === typePins[1].title) {
-      return [...getters.pinsUser];
+      let array = Array.from(new Set(getters.pinsUser));
+      return [...array];
     }
     if (typePinTitle === typePins[2].title) {
-      return [...getters.pinsUserSaved];
+      let array = Array.from(new Set(getters.pinsUserSaved));
+      return [...array];
     }
   },
   async manualUpdateGetter({ commit, dispatch }) {
@@ -211,6 +212,14 @@ const actions = {
     dispatch("iterateRecomendedPins", {
       pin: pin
     });
+  },
+  appendToPinsUser({ getters, commit, dispatch }, payload) {
+    let maximum = getters.lastPinsUserId;
+    maximum++;
+    payload["id"] = maximum;
+    payload["counter"] = 0;
+    commit(APPEND_TO_PINS_USER, payload);
+    dispatch("manualUpdateGetter");
   }
 };
 
@@ -226,6 +235,9 @@ const mutations = {
   },
   [SET_RECOMENDATION_HINTS](state, payload) {
     state.recommendedHints.push(payload);
+  },
+  [APPEND_TO_PINS_USER](state, payload) {
+    state.pinsUser.push(payload);
   }
 };
 
