@@ -1,11 +1,14 @@
 import search from "./search";
 import pins from "./pins";
+import category from "./category";
+
 import {
   SET_TYPE_PIN_TITLE,
   UPDATE_SEARCHING,
   SET_ENTERED,
   REFRESH_RECOMENDATION_PINS,
-  REFRESH_RECOMENDATION_HINTS
+  REFRESH_RECOMENDATION_HINTS,
+  SET_CATEGORY_TITLE
 } from "../mutation-types";
 
 const state = {
@@ -20,13 +23,15 @@ const state = {
 const getters = {};
 
 const actions = {
-  changeTypePinTitle({ commit }, payload) {
+  changeTypePinTitle({ commit, dispatch }, payload) {
     let title = payload.title;
     commit(SET_TYPE_PIN_TITLE, title);
     commit(`search/${UPDATE_SEARCHING}`, null);
     commit(`search/${SET_ENTERED}`, "");
     commit(`pins/${REFRESH_RECOMENDATION_PINS}`, []);
     commit(`pins/${REFRESH_RECOMENDATION_HINTS}`, []);
+    dispatch(`pins/manualUpdateGetter`);
+    commit(`category/${SET_CATEGORY_TITLE}`, "Choose pin");
   }
 };
 
@@ -38,7 +43,8 @@ const mutations = {
 
 const modules = {
   search,
-  pins
+  pins,
+  category
 };
 
 export default {

@@ -18,10 +18,10 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <div class="refresh-category" v-if="categoryTitle !== 'Выберите пин'">
+      <div class="refresh-category" v-if="categoryTitle !== 'Choose pin'">
         <div class="mx-2 my-1">
           <v-btn depressed small color="error" @click="refreshCategory()"
-            >Сбросить категорию</v-btn
+            >Refresh pins</v-btn
           >
         </div>
       </div>

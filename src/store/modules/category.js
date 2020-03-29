@@ -2,7 +2,7 @@ import pins from "./pins";
 import { SET_CATEGORY_TITLE } from "../mutation-types";
 
 const state = {
-  categoryTitle: "Выберите пин"
+  categoryTitle: "Choose pin"
 };
 
 const getters = {};
@@ -16,7 +16,7 @@ const actions = {
     });
   },
   refreshCategory({ commit, dispatch }) {
-    commit(SET_CATEGORY_TITLE, "Выберите пин");
+    commit(SET_CATEGORY_TITLE, "Choose pin");
     dispatch("pins/pushRecomendedHints");
   }
 };

@@ -78,6 +78,15 @@ const state = {
 };
 
 const getters = {
+  pinsG: state => {
+    let arr = [];
+    let pinsGlobal = state.pinsGlobal;
+    for (let element in pinsGlobal) {
+      let hint = pinsGlobal[element];
+      arr.push(hint.pin);
+    }
+    return arr;
+  },
   hintsGlobal: state => {
     let arr = [];
     let pinsGlobal = state.pinsGlobal;
@@ -88,6 +97,15 @@ const getters = {
     let merged = arr.flat(1);
     return merged;
   },
+  pinsU: state => {
+    let arr = [];
+    let pinsUser = state.pinsUser;
+    for (let element in pinsUser) {
+      let hint = pinsUser[element];
+      arr.push(hint.pin);
+    }
+    return arr;
+  },
   hintsUser: state => {
     let arr = [];
     let pinsUser = state.pinsUser;
@@ -97,6 +115,15 @@ const getters = {
     }
     let merged = arr.flat(1);
     return merged;
+  },
+  pinsUS: state => {
+    let arr = [];
+    let pinsUserSaved = state.pinsUserSaved;
+    for (let element in pinsUserSaved) {
+      let hint = pinsUserSaved[element];
+      arr.push(hint.pin);
+    }
+    return arr;
   },
   hintsUserSaved: state => {
     let arr = [];
@@ -111,18 +138,26 @@ const getters = {
 };
 
 const actions = {
-  // manualUpdateGettersGlobal({
-  //   state,
-  //   commit,
-  //   getters,
-  //   dispatch
-  // }) {
-  //   if (state.recommendedPinsGlobal.length === 0) {
-  //     commit(REFRESH_RECOMENDATION_PINS_GLOBAL, [...getters.pinsListGlobal]);
-  //     dispatch('pushRecomendedHintsGlobal');
-  //   }
-  // },
-  checkTypePin({ rootState, state }) {
+  returnTypePinGetter({ rootState, getters }) {
+    let typePinTitle = rootState.typePin.typePinTitle;
+    let typePins = rootState.typePin.typePins;
+
+    if (typePinTitle === typePins[0].title) {
+      return [...getters.pinsG];
+    }
+    if (typePinTitle === typePins[1].title) {
+      return [...getters.pinsU];
+    }
+    if (typePinTitle === typePins[2].title) {
+      return [...getters.pinsUS];
+    }
+  },
+  async manualUpdateGetter({ commit, dispatch }) {
+    let getter = await dispatch("returnTypePinGetter");
+    commit(REFRESH_RECOMENDATION_PINS, getter);
+    dispatch("pushRecomendedHints");
+  },
+  returnTypePinState({ rootState, state }) {
     let typePinTitle = rootState.typePin.typePinTitle;
     let typePins = rootState.typePin.typePins;
 
@@ -139,7 +174,7 @@ const actions = {
   async findElementInPins({ commit, dispatch }, payload) {
     let entered = payload.entered;
     commit(REFRESH_RECOMENDATION_PINS, []);
-    let pins = await dispatch("checkTypePin");
+    let pins = await dispatch("returnTypePinState");
     for (let element in pins) {
       let item = pins[element];
 
@@ -151,7 +186,7 @@ const actions = {
   },
   async iterateRecomendedPins({ commit, dispatch }, payload) {
     let pin = payload.pin;
-    let pins = await dispatch("checkTypePin");
+    let pins = await dispatch("returnTypePinState");
     for (let element in pins) {
       let item = pins[element];
       if (item.pin === pin) {
@@ -163,7 +198,7 @@ const actions = {
     commit(REFRESH_RECOMENDATION_HINTS, []);
     let recommendedPins = state.recommendedPins;
     // idk why async search start working with that line
-    await dispatch("checkTypePin");
+    await dispatch("returnTypePinState");
     for (let element in recommendedPins) {
       let recommendedPin = recommendedPins[element];
       dispatch("iterateRecomendedPins", {

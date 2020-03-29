@@ -17,7 +17,7 @@
 
 <script>
 import ComboboxSearch from "./ComboboxSearch";
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
   components: {
@@ -26,6 +26,12 @@ export default {
   computed: {
     ...mapState("typePin", ["typePinTitle", "typePins"]),
     ...mapGetters("pins", ["hintsGlobal", "hintsUser", "hintsUserSaved"])
+  },
+  created() {
+    this.manualUpdateGetter();
+  },
+  methods: {
+    ...mapActions("pins", ["manualUpdateGetter"])
   }
 };
 </script>
