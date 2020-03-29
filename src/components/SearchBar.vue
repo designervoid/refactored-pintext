@@ -4,9 +4,9 @@
     prepend-inner-icon="mdi-magnify"
     solo-inverted
     flat
-    v-model="entered"
+    v-model="entered_"
     :items="hints"
-    :search-input.sync="searching"
+    :search-input.sync="searching_"
     hide-selected
     class="hidden-sm-and-down"
     label="Search"
@@ -29,16 +29,42 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      searching: null,
-      entered: "",
       menuProps: {
         closeOnContentClick: true
       },
       hints: ["1", "2", "3"]
     };
+  },
+  computed: {
+    ...mapState("search", ["searching", "entered"]),
+    searching_: {
+      get() {
+        return this.searching;
+      },
+      set(value) {
+        this.UPDATE_SEARCHING(value);
+      }
+    },
+    entered_: {
+      get() {
+        return this.entered;
+      },
+      set(value) {
+        this.SET_ENTERED(value);
+      }
+    }
+  },
+  methods: {
+    ...mapMutations("search", ["UPDATE_SEARCHING", "SET_ENTERED"]),
+    onChange() {
+      this.$nextTick(() => {
+        this.$refs.searchField.isMenuActive = false;
+      });
+    }
   }
 };
 </script>
