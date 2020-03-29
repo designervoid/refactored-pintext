@@ -13,7 +13,7 @@
       <v-btn
         icon
         @click="clickedBookmark()"
-        v-bind:class="{ 'non-active-bookmark': !isActiveBookmark }"
+        v-bind:class="{ 'non-active-bookmark': !object.bookmarked }"
       >
         <v-icon>mdi-bookmark</v-icon>
       </v-btn>
@@ -27,15 +27,15 @@
 
     <v-snackbar v-if="isBookmarked" v-model="snackbar" :timeout="timeout">
       {{
-        isActiveBookmark
+        object.bookmarked
           ? 'Пинтекст успешно добавлен. Вы можете увидеть его во вкладке "Сохраненные пинтексты".'
           : "Пинтекст удален из закладок."
       }}
       <v-btn
-        v-if="isActiveBookmark"
+        v-if="object.bookmarked"
         color="blue"
         text
-        @click="snackbar = false"
+        @click="showSavedData()"
       >
         Посмотреть
       </v-btn>
@@ -47,7 +47,8 @@
 </template>
 
 <script>
-// import { mapMutations, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
+
 export default {
   props: {
     object: {
@@ -66,13 +67,21 @@ export default {
   data: () => ({
     snackbar: false,
     timeout: 2000,
-    snackbarText: "",
-    isActiveBookmark: false
+    snackbarText: ""
   }),
+  computed: {
+    ...mapState("typePin", ["typePins"])
+  },
   methods: {
+    ...mapActions("pins", ["changeBookmarked"]),
+    ...mapActions("typePin", ["changeTypePinTitle"]),
     clickedBookmark() {
       this.snackbar = true;
-      this.isActiveBookmark = !this.isActiveBookmark;
+      this.changeBookmarked({ id: this.object.id });
+    },
+    showSavedData() {
+      this.snackbar = false;
+      this.changeTypePinTitle({ title: this.typePins[2].title });
     }
   }
 };

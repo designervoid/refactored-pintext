@@ -3,7 +3,8 @@ import {
   SET_RECOMENDATION_PINS,
   REFRESH_RECOMENDATION_HINTS,
   SET_RECOMENDATION_HINTS,
-  APPEND_TO_PINS_USER
+  APPEND_TO_PINS_USER,
+  APPEND_TO_PINS_USER_SAVED
 } from "../mutation-types";
 
 const state = {
@@ -132,6 +133,9 @@ const getters = {
     });
 
     return maximum;
+  },
+  findPinById: state => id => {
+    return state.pinsGlobal.find(pin => pin.id === id);
   }
 };
 
@@ -220,6 +224,12 @@ const actions = {
     payload["counter"] = 0;
     commit(APPEND_TO_PINS_USER, payload);
     dispatch("manualUpdateGetter");
+  },
+  changeBookmarked({ getters, commit }, payload) {
+    let id = payload.id;
+    let object = getters.findPinById(id);
+    object.bookmarked = !object.bookmarked;
+    commit(APPEND_TO_PINS_USER_SAVED, object);
   }
 };
 
@@ -237,7 +247,10 @@ const mutations = {
     state.recommendedHints.push(payload);
   },
   [APPEND_TO_PINS_USER](state, payload) {
-    state.pinsUser.push(payload);
+    state.pinsUser.unshift(payload);
+  },
+  [APPEND_TO_PINS_USER_SAVED](state, payload) {
+    state.pinsUserSaved.unshift(payload);
   }
 };
 

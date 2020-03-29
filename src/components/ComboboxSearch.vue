@@ -76,6 +76,7 @@ export default {
   methods: {
     ...mapActions("pins", ["findElementInPins", "pushRecomendedHints"]),
     ...mapMutations("search", ["UPDATE_SEARCHING", "SET_ENTERED"]),
+    ...mapMutations("category", ["SET_CATEGORY_TITLE"]),
     onChange() {
       this.$nextTick(() => {
         if (this.entered_) {
@@ -84,6 +85,7 @@ export default {
             entered: this.entered_
           });
           this.pushRecomendedHints();
+          this.SET_CATEGORY_TITLE("Choose pin");
         }
       });
     }
