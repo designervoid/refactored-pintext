@@ -20,22 +20,47 @@ const state = {
         "global_computer"
       ],
       bookmarked: false
+    },
+    {
+      id: 2,
+      pin: "GLOBAL - programming",
+      counter: 0,
+      title: "GLOBAL - some title about prograaming",
+      text: "GLOBAL - some text here about prograaming",
+      badges: [
+        "global_programmer",
+        "global_code",
+        "global_coder",
+        "global_javascript",
+        "global_computer",
+        "global_vue",
+        "global_python"
+      ],
+      bookmarked: false
+    },
+    {
+      id: 3,
+      pin: "GLOBAL - computers",
+      counter: 0,
+      title: "GLOBAL - some title about computers",
+      text: "GLOBAL - some text here about computers",
+      badges: ["global_computer", "global_network"],
+      bookmarked: false
     }
   ],
   pinsUser: [
     {
-      id: 2,
+      id: 4,
       pin: "USER - gaming",
       counter: 0,
       title: "USER - some title about gaming",
       text: "USER - some text here about gaming",
-      badges: ["user_game", "user_gamer", "user_games", "user_computer"],
-      bookmarked: false
+      badges: ["user_game", "user_gamer", "user_games", "user_computer"]
     }
   ],
   pinsUserSaved: [
     {
-      id: 3,
+      id: 5,
       pin: "USER_SAVED - gaming",
       counter: 0,
       title: "USER_SAVED - some title about gaming",
@@ -45,8 +70,7 @@ const state = {
         "user_saved_gamer",
         "user_saved_games",
         "user_saved_computer"
-      ],
-      bookmarked: false
+      ]
     }
   ],
   recommendedPins: [],

@@ -1,6 +1,5 @@
 <template>
-  <!-- v-if="recommendedPinsGlobal.length > 0 && searchDropdownTitle === 'Все пинтексты'" -->
-  <v-row>
+  <v-row v-if="recommendedPins.length > 0">
     <v-col cols="12">
       <v-menu offset-y :close-on-click="true">
         <template v-slot:activator="{ on }">
@@ -32,6 +31,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
+
 export default {
   computed: {
     ...mapState("category", ["categoryTitle"]),

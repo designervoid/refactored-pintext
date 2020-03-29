@@ -1,3 +1,4 @@
+import pins from "./pins";
 import { SET_CATEGORY_TITLE } from "../mutation-types";
 
 const state = {
@@ -7,12 +8,16 @@ const state = {
 const getters = {};
 
 const actions = {
-  changeCategoryTitle({ commit }, payload) {
+  changeCategoryTitle({ commit, dispatch }, payload) {
     let title = payload.title;
     commit(SET_CATEGORY_TITLE, title);
+    dispatch("pins/filterByPin", {
+      pin: title
+    });
   },
-  refreshCategory({ commit }) {
+  refreshCategory({ commit, dispatch }) {
     commit(SET_CATEGORY_TITLE, "Выберите пин");
+    dispatch("pins/pushRecomendedHints");
   }
 };
 
@@ -22,7 +27,9 @@ const mutations = {
   }
 };
 
-const modules = {};
+const modules = {
+  pins
+};
 
 export default {
   namespaced: true,
