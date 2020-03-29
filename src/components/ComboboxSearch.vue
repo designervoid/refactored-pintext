@@ -78,11 +78,13 @@ export default {
     ...mapMutations("search", ["UPDATE_SEARCHING", "SET_ENTERED"]),
     onChange() {
       this.$nextTick(() => {
-        this.$refs.searchField.isMenuActive = false;
-        this.findElementInPins({
-          entered: this.entered_
-        });
-        this.pushRecomendedHints();
+        if (this.entered_) {
+          this.$refs.searchField.isMenuActive = false;
+          this.findElementInPins({
+            entered: this.entered_
+          });
+          this.pushRecomendedHints();
+        }
       });
     }
   }

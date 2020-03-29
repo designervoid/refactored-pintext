@@ -78,7 +78,7 @@ const state = {
 };
 
 const getters = {
-  pinsG: state => {
+  pinsGlobal: state => {
     let arr = [];
     let pinsGlobal = state.pinsGlobal;
     for (let element in pinsGlobal) {
@@ -97,7 +97,7 @@ const getters = {
     let merged = arr.flat(1);
     return merged;
   },
-  pinsU: state => {
+  pinsUser: state => {
     let arr = [];
     let pinsUser = state.pinsUser;
     for (let element in pinsUser) {
@@ -116,7 +116,7 @@ const getters = {
     let merged = arr.flat(1);
     return merged;
   },
-  pinsUS: state => {
+  pinsUserSaved: state => {
     let arr = [];
     let pinsUserSaved = state.pinsUserSaved;
     for (let element in pinsUserSaved) {
@@ -138,25 +138,6 @@ const getters = {
 };
 
 const actions = {
-  returnTypePinGetter({ rootState, getters }) {
-    let typePinTitle = rootState.typePin.typePinTitle;
-    let typePins = rootState.typePin.typePins;
-
-    if (typePinTitle === typePins[0].title) {
-      return [...getters.pinsG];
-    }
-    if (typePinTitle === typePins[1].title) {
-      return [...getters.pinsU];
-    }
-    if (typePinTitle === typePins[2].title) {
-      return [...getters.pinsUS];
-    }
-  },
-  async manualUpdateGetter({ commit, dispatch }) {
-    let getter = await dispatch("returnTypePinGetter");
-    commit(REFRESH_RECOMENDATION_PINS, getter);
-    dispatch("pushRecomendedHints");
-  },
   returnTypePinState({ rootState, state }) {
     let typePinTitle = rootState.typePin.typePinTitle;
     let typePins = rootState.typePin.typePins;
@@ -171,13 +152,31 @@ const actions = {
       return state.pinsUserSaved;
     }
   },
+  returnTypePinGetter({ rootState, getters }) {
+    let typePinTitle = rootState.typePin.typePinTitle;
+    let typePins = rootState.typePin.typePins;
+
+    if (typePinTitle === typePins[0].title) {
+      return [...getters.pinsGlobal];
+    }
+    if (typePinTitle === typePins[1].title) {
+      return [...getters.pinsUser];
+    }
+    if (typePinTitle === typePins[2].title) {
+      return [...getters.pinsUserSaved];
+    }
+  },
+  async manualUpdateGetter({ commit, dispatch }) {
+    let getter = await dispatch("returnTypePinGetter");
+    commit(REFRESH_RECOMENDATION_PINS, getter);
+    dispatch("pushRecomendedHints");
+  },
   async findElementInPins({ commit, dispatch }, payload) {
     let entered = payload.entered;
     commit(REFRESH_RECOMENDATION_PINS, []);
     let pins = await dispatch("returnTypePinState");
     for (let element in pins) {
       let item = pins[element];
-
       if (item.badges.indexOf(entered) !== -1) {
         item.counter += 1;
         commit(SET_RECOMENDATION_PINS, item.pin);
