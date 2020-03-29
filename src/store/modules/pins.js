@@ -1,3 +1,10 @@
+import {
+  REFRESH_RECOMENDATION_PINS,
+  SET_RECOMENDATION_PINS,
+  REFRESH_RECOMENDATION_HINTS,
+  SET_RECOMENDATION_HINTS
+} from "../mutation-types";
+
 const state = {
   pinsGlobal: [
     {
@@ -47,35 +54,121 @@ const state = {
 };
 
 const getters = {
-  pinsListGlobal: state => {
+  hintsGlobal: state => {
     let arr = [];
-    for (let element in state.pinsGlobal) {
-      let hint = state.pinsGlobal[element];
-      arr.push(hint.pin);
+    let pinsGlobal = state.pinsGlobal;
+    for (let element in pinsGlobal) {
+      let item = pinsGlobal[element];
+      arr.push(item.badges);
     }
-    return arr;
+    let merged = arr.flat(1);
+    return merged;
   },
-  pinsListUser: state => {
+  hintsUser: state => {
     let arr = [];
-    for (let element in state.pinsUser) {
-      let hint = state.pinsUser[element];
-      arr.push(hint.pin);
+    let pinsUser = state.pinsUser;
+    for (let element in pinsUser) {
+      let item = pinsUser[element];
+      arr.push(item.badges);
     }
-    return arr;
+    let merged = arr.flat(1);
+    return merged;
   },
-  pinsListUserSaved: state => {
+  hintsUserSaved: state => {
     let arr = [];
-    for (let element in state.pinsUserSaved) {
-      let hint = state.pinsUserSaved[element];
-      arr.push(hint.pin);
+    let pinsUserSaved = state.pinsUserSaved;
+    for (let element in pinsUserSaved) {
+      let item = pinsUserSaved[element];
+      arr.push(item.badges);
     }
-    return arr;
+    let merged = arr.flat(1);
+    return merged;
   }
 };
 
-const actions = {};
+const actions = {
+  // manualUpdateGettersGlobal({
+  //   state,
+  //   commit,
+  //   getters,
+  //   dispatch
+  // }) {
+  //   if (state.recommendedPinsGlobal.length === 0) {
+  //     commit(REFRESH_RECOMENDATION_PINS_GLOBAL, [...getters.pinsListGlobal]);
+  //     dispatch('pushRecomendedHintsGlobal');
+  //   }
+  // },
+  checkTypePin({ rootState, state }) {
+    let typePinTitle = rootState.typePin.typePinTitle;
+    let typePins = rootState.typePin.typePins;
 
-const mutations = {};
+    if (typePinTitle === typePins[0].title) {
+      return state.pinsGlobal;
+    }
+    if (typePinTitle === typePins[1].title) {
+      return state.pinsUser;
+    }
+    if (typePinTitle === typePins[2].title) {
+      return state.pinsUserSaved;
+    }
+  },
+  async findElementInPins({ commit, dispatch }, payload) {
+    let entered = payload.entered;
+    commit(REFRESH_RECOMENDATION_PINS, []);
+    let pins = await dispatch("checkTypePin");
+    for (let element in pins) {
+      let item = pins[element];
+
+      if (item.badges.indexOf(entered) !== -1) {
+        item.counter += 1;
+        commit(SET_RECOMENDATION_PINS, item.pin);
+      }
+    }
+  },
+  async iterateRecomendedPins({ commit, dispatch }, payload) {
+    let pin = payload.pin;
+    let pins = await dispatch("checkTypePin");
+    for (let element in pins) {
+      let item = pins[element];
+      if (item.pin === pin) {
+        commit(SET_RECOMENDATION_HINTS, item);
+      }
+    }
+  },
+  async pushRecomendedHints({ state, dispatch, commit }) {
+    commit(REFRESH_RECOMENDATION_HINTS, []);
+    let recommendedPins = state.recommendedPins;
+    await dispatch("checkTypePin");
+    for (let element in recommendedPins) {
+      let recommendedPin = recommendedPins[element];
+      await dispatch("iterateRecomendedPins", {
+        pin: recommendedPin
+      });
+    }
+  },
+  filterByPin({ commit, dispatch }, payload) {
+    let pin = payload.pin;
+    commit(REFRESH_RECOMENDATION_HINTS, []);
+    dispatch("iterateRecomendedPins", {
+      pin: pin
+    });
+  }
+};
+
+const mutations = {
+  [REFRESH_RECOMENDATION_PINS](state, payload) {
+    state.recommendedPins = payload;
+  },
+  [SET_RECOMENDATION_PINS](state, payload) {
+    state.recommendedPins.push(payload);
+  },
+  [REFRESH_RECOMENDATION_HINTS](state, payload) {
+    state.recommendedHints = payload;
+  },
+  [SET_RECOMENDATION_HINTS](state, payload) {
+    state.recommendedHints.push(payload);
+  }
+};
 
 const modules = {};
 

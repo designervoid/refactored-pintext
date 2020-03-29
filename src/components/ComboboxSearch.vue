@@ -1,5 +1,4 @@
 <template>
-  <!-- v-if="typePinTitle === typePins[0].title" -->
   <v-combobox
     v-if="render"
     prepend-inner-icon="mdi-magnify"
