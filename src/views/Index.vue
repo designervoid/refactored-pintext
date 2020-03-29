@@ -15,17 +15,11 @@
 import AppBar from "@/components/AppBar";
 import CardsView from "@/components/CardsView";
 
-// import { mapState } from "vuex";
-
 export default {
   name: "App",
   components: {
     AppBar,
     CardsView
   }
-  // computed: {
-  //   ...mapState("search", ["searching", "entered"]),
-  //   ...mapState("pins", ["recommendedHints"])
-  // }
 };
 </script>
