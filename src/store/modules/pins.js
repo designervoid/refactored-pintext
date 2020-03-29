@@ -24,7 +24,7 @@ const state = {
       title: "reactive frameworks",
       text: "new way to create apps",
       badges: ["programmer", "code", "coder", "javascript", "computer", "vue"],
-      id: 3,
+      id: 2,
       counter: 0
     },
     {
