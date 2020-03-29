@@ -1,0 +1,1 @@
+export const SET_TYPE_PIN_TITLE = "SET_TYPE_PIN_TITLE";
