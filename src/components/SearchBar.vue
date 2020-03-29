@@ -2,15 +2,15 @@
   <div>
     <ComboboxSearch
       :render="typePinTitle === typePins[0].title"
-      :hints="pinsListGlobal"
+      :hints="hintsGlobal"
     />
     <ComboboxSearch
       :render="typePinTitle === typePins[1].title"
-      :hints="pinsListUser"
+      :hints="hintsUser"
     />
     <ComboboxSearch
       :render="typePinTitle === typePins[2].title"
-      :hints="pinsListUserSaved"
+      :hints="hintsUserSaved"
     />
   </div>
 </template>
@@ -25,11 +25,7 @@ export default {
   },
   computed: {
     ...mapState("typePin", ["typePinTitle", "typePins"]),
-    ...mapGetters("pins", [
-      "pinsListGlobal",
-      "pinsListUser",
-      "pinsListUserSaved"
-    ])
+    ...mapGetters("pins", ["hintsGlobal", "hintsUser", "hintsUserSaved"])
   }
 };
 </script>

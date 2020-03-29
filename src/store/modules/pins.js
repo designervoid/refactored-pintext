@@ -138,10 +138,11 @@ const actions = {
   async pushRecomendedHints({ state, dispatch, commit }) {
     commit(REFRESH_RECOMENDATION_HINTS, []);
     let recommendedPins = state.recommendedPins;
+    // idk why async search start working with that line
     await dispatch("checkTypePin");
     for (let element in recommendedPins) {
       let recommendedPin = recommendedPins[element];
-      await dispatch("iterateRecomendedPins", {
+      dispatch("iterateRecomendedPins", {
         pin: recommendedPin
       });
     }

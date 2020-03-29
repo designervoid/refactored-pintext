@@ -14,6 +14,7 @@
     :menu-props="menuProps"
     ref="searchField"
     @change="onChange()"
+    clearable
   >
     <template v-slot:no-data>
       <v-list-item>
@@ -29,7 +30,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 
 export default {
   props: {
@@ -73,10 +74,15 @@ export default {
     }
   },
   methods: {
+    ...mapActions("pins", ["findElementInPins", "pushRecomendedHints"]),
     ...mapMutations("search", ["UPDATE_SEARCHING", "SET_ENTERED"]),
     onChange() {
       this.$nextTick(() => {
         this.$refs.searchField.isMenuActive = false;
+        this.findElementInPins({
+          entered: this.entered_
+        });
+        this.pushRecomendedHints();
       });
     }
   }

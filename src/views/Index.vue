@@ -4,6 +4,8 @@
     <v-content align="center" justify="center">
       searching: {{ searching }} <br />
       entered: {{ entered }} <br />
+      recommended items: <br />
+      <code>{{ recommendedHints }}</code>
     </v-content>
   </v-app>
 </template>
@@ -18,7 +20,8 @@ export default {
     AppBar
   },
   computed: {
-    ...mapState("search", ["searching", "entered"])
+    ...mapState("search", ["searching", "entered"]),
+    ...mapState("pins", ["recommendedHints"])
   }
 };
 </script>
